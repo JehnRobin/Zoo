@@ -2,6 +2,7 @@ package zoo;
 
 import animals.Animal;
 import areas.*;
+import dataStructures.CashCount;
 import dataStructures.ICashCount;
 
 import java.util.ArrayList;
@@ -11,6 +12,9 @@ public class Zoo implements IZoo {
 
     private HashMap<Integer, IArea> areas = new HashMap<>();
     private int idCounter = 1;
+
+    private int entranceFee;
+    private CashCount stonks = new CashCount();
 
     public Zoo() {
         this.areas.put(0, new Entrance());
@@ -45,6 +49,9 @@ public class Zoo implements IZoo {
 
     @Override
     public void removeArea(int areaID) {
+        /**
+         * Area should be removed from adjacent areas
+         */
         if (!removeError(areaID)) {
             areas.remove(areaID);
         }
@@ -54,6 +61,9 @@ public class Zoo implements IZoo {
         // Check that the area is even in the zoo
         if (areas.get(areaID) == null) {
             System.err.println("Area with ID " + areaID + " doesn't exist!");
+            return true;
+        } else if (areaID == 0) {
+            System.err.println("The entrance cannot be removed!");
             return true;
         } else {
             return false;
@@ -67,9 +77,6 @@ public class Zoo implements IZoo {
 
     @Override
     public byte addAnimal(int areaId, Animal animal) {
-        /**
-         * TO DO: Animals can't be added twice
-         **/
         IArea area = areas.get(areaId);
         if (area instanceof HumanArea) {
             return Codes.NOT_A_HABITAT;
@@ -197,23 +204,37 @@ public class Zoo implements IZoo {
 
     @Override
     public void setEntranceFee(int pounds, int pence) {
-
-    }
-
-    @Override
-    public void setCashSupply(ICashCount coins) {
-
+        if (pence % 10 != 0) {
+            System.err.println("Invalid entrance fee! No coins smaller than 10 allowed.");
+        } else {
+            entranceFee = pounds * 100 + pence;
+        }
     }
 
     @Override
     public ICashCount getCashSupply() {
-        return null;
+        return stonks;
+    }
+
+    @Override
+    public void setCashSupply(ICashCount coins) {
+        if (coins instanceof CashCount) {
+            this.stonks = (CashCount) coins;
+        }
     }
 
     @Override
     public ICashCount payEntranceFee(ICashCount cashInserted) {
-        return null;
+        int moneyInserted = ((CashCount) cashInserted).cashCountValue();
+        int change = moneyInserted - entranceFee;
+
+        CashCount returnCash = stonks.returnCoins(change);
+
+        if (returnCash == null) {
+            System.err.println("Transaction unsuccessful!");
+            return cashInserted;
+        } else {
+            return returnCash;
+        }
     }
-
-
 }
