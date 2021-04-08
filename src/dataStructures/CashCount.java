@@ -15,16 +15,17 @@ public class CashCount implements ICashCount {
     }
 
     public CashCount(HashMap<Integer, Integer> coins) {
-        if (checkHashMapIsLegal(coins)){
+        // Initialize as empty
+        this();
+
+        // Override coins if HashMap is valid
+        if (checkHashMapIsValid(coins)){
             this.coins = coins;
         } else {
             System.err.println("Instead the object has been initialized with no coins in it!");
-            /*
-            Hier nochmal checken
-             */
-            new CashCount();
         }
     }
+
 
     @Override
     public int getNrNotes_20pounds() {
@@ -120,13 +121,13 @@ public class CashCount implements ICashCount {
     }
 
     public void setCoins(HashMap<Integer, Integer> coins) {
-        if (checkHashMapIsLegal(coins)) {
+        if (checkHashMapIsValid(coins)) {
             this.coins = coins;
         }
     }
 
     public void addCoins(HashMap<Integer, Integer> coins) {
-        if (checkHashMapIsLegal(coins)) {
+        if (checkHashMapIsValid(coins)) {
             // Sum the value for each coin
             for (int key : coins.keySet()) {
                 this.coins.put(key, this.coins.get(key) + coins.get(key));
@@ -134,7 +135,7 @@ public class CashCount implements ICashCount {
         }
     }
 
-    private boolean checkHashMapIsLegal(HashMap<Integer, Integer> coins) {
+    private boolean checkHashMapIsValid(HashMap<Integer, Integer> coins) {
         boolean retBool = true;
 
         // Returns true if every key is in the list of allowedCoins and the corresponding number is positive

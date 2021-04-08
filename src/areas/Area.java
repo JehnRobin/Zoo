@@ -11,8 +11,10 @@ public abstract class Area implements IArea {
         return adjacentAreas;
     }
 
-    public void addConnection(int toAreaID) {
+    public void addAdjacentArea(int toAreaID) {
         adjacentAreas.add(toAreaID);
     }
+
+    public void removeAdjacentArea(int areaId) {adjacentAreas.remove(Integer.valueOf(areaId));}
 
 }

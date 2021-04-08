@@ -10,5 +10,9 @@ public interface IArea
 	/**
 	 * @return Returns the IDs of the areas adjacent to this one.
 	 */
-	public ArrayList<Integer> getAdjacentAreas();
+	ArrayList<Integer> getAdjacentAreas();
+
+	void addAdjacentArea(int areaId);
+
+	void removeAdjacentArea(int areaId);
 }

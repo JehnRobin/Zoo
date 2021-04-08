@@ -63,10 +63,16 @@ public class ZooTest {
 
     @Test
     public void removeTest() {
+        zoo.connectAreas(0, 1);
+        zoo.connectAreas(1, 2);
+        zoo.connectAreas(2, 3);
+        zoo.connectAreas(3, 4);
         assert (zoo.getArea(3) != null);
         zoo.removeArea(3);
+        assert (!zoo.getArea(2).getAdjacentAreas().contains(3));
         assert (zoo.getArea(3) == null);
         zoo.removeArea(3);
+
     }
 
     @Test

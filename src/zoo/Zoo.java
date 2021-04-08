@@ -49,11 +49,15 @@ public class Zoo implements IZoo {
 
     @Override
     public void removeArea(int areaID) {
-        /**
-         * Area should be removed from adjacent areas
-         */
         if (!removeError(areaID)) {
             areas.remove(areaID);
+            removeFromAdjacentAreas(areaID);
+        }
+    }
+
+    private void removeFromAdjacentAreas(int areaID) {
+        for (int key: areas.keySet()) {
+            areas.get(key).removeAdjacentArea(areaID);
         }
     }
 
@@ -87,16 +91,16 @@ public class Zoo implements IZoo {
 
     @Override
     public void connectAreas(int fromAreaId, int toAreaId) {
-        Area fromArea = (Area) areas.get(fromAreaId);
-        Area toArea = (Area) areas.get(toAreaId);
+        IArea fromArea = areas.get(fromAreaId);
+        IArea toArea = areas.get(toAreaId);
 
         // Only add connection if no error occurs
         if (!connectionError(fromAreaId, fromArea, toAreaId, toArea)) {
-            fromArea.addConnection(toAreaId);
+            fromArea.addAdjacentArea(toAreaId);
         }
     }
 
-    private boolean connectionError(int fromAreaId, Area from, int toAreaId, Area to) {
+    private boolean connectionError(int fromAreaId, IArea from, int toAreaId, IArea to) {
         // Can't connect areas that don't exist
         if (from == null && to == null) {
             System.err.println("The starting area with ID " + fromAreaId + " and the ending area with ID " + toAreaId + " don't exist!");
