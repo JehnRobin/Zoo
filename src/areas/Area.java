@@ -15,6 +15,8 @@ public abstract class Area implements IArea {
         adjacentAreas.add(toAreaID);
     }
 
-    public void removeAdjacentArea(int areaId) {adjacentAreas.remove(Integer.valueOf(areaId));}
+    public void removeAdjacentArea(int areaId) {
+        adjacentAreas.remove(Integer.valueOf(areaId));
+    }
 
 }

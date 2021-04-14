@@ -1,5 +1,5 @@
 package areas;
 
-public class PicnicArea extends HumanArea{
+public class PicnicArea extends Area{
 
 }

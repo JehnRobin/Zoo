@@ -2,11 +2,14 @@ package zoo;
 
 import animals.*;
 import areas.*;
+import dataStructures.CashCount;
+import dataStructures.ICashCount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class ZooTest {
     Zoo zoo = new Zoo();
@@ -15,7 +18,7 @@ public class ZooTest {
     IArea enclosure = new Enclosure(4);
     IArea aquarium = new Aquarium(3);
     IArea aquarium2 = new Aquarium(3);
-    IArea entrance = new Entrance();
+    IArea entrance = Entrance.getInstance();
     IArea picnic = new PicnicArea();
 
     @BeforeEach
@@ -49,7 +52,7 @@ public class ZooTest {
 
         IArea cage2 = new Cage(2);
         IArea enclosure2 = new Enclosure(4);
-        IArea entrance2 = new Entrance();
+        IArea entrance2 = Entrance.getInstance();
         IArea picnic2 = new PicnicArea();
 
         assert (zoo.addArea(cage2) == 6);
@@ -178,5 +181,109 @@ public class ZooTest {
         System.out.println(zoo.findUnreachableAreas());
 
         assert (zoo.findUnreachableAreas().equals(new ArrayList<>(Arrays.asList(4, 6, 7))));
+    }
+
+    @Test
+    public void rightChange(){
+        zoo.setEntranceFee(12, 40);
+
+        // Money originally inserted
+        HashMap<Integer, Integer> coins = new HashMap<>();
+        coins.put(2000, 5);
+        coins.put(1000, 5);
+        coins.put(500, 5);
+        coins.put(200, 5);
+        coins.put(100, 5);
+        coins.put(50, 5);
+        coins.put(20, 5);
+        coins.put(10, 5);
+        CashCount cashCount = new CashCount(coins);
+        zoo.setCashSupply(cashCount);
+
+
+        // Money inserted
+        HashMap<Integer, Integer> pay = new HashMap<>();
+        pay.put(2000, 1);
+        pay.put(1000, 0);
+        pay.put(500, 0);
+        pay.put(200, 0);
+        pay.put(100, 0);
+        pay.put(50, 0);
+        pay.put(20, 0);
+        pay.put(10, 0);
+        CashCount payCount = new CashCount(pay);
+
+
+        // Expected change
+        HashMap<Integer, Integer> returnH = new HashMap<>();
+        returnH.put(2000, 0);
+        returnH.put(1000, 0);
+        returnH.put(500, 1);
+        returnH.put(200, 1);
+        returnH.put(100, 0);
+        returnH.put(50, 1);
+        returnH.put(20, 0);
+        returnH.put(10, 1);
+        CashCount returnCount = new CashCount(returnH);
+
+        assert(((CashCount) zoo.payEntranceFee(payCount)).getCoins().equals(returnH));
+
+        cashCount = (CashCount) zoo.getCashSupply();
+
+        for (int key: cashCount.getCoins().keySet()) {
+            System.out.println(key + ": " + cashCount.getCoins().get(key) + " " + returnCount.getCoins().get(key));
+        }
+    }
+
+    @Test
+    public void rightChange2(){
+        zoo.setEntranceFee(12, 40);
+
+        // Money originally inserted
+        HashMap<Integer, Integer> coins = new HashMap<>();
+        coins.put(2000, 5);
+        coins.put(1000, 5);
+        coins.put(500, 5);
+        coins.put(200, 5);
+        coins.put(100, 5);
+        coins.put(50, 5);
+        coins.put(20, 5);
+        coins.put(10, 5);
+        CashCount cashCount = new CashCount(coins);
+        zoo.setCashSupply(cashCount);
+
+
+        // Money inserted
+        HashMap<Integer, Integer> pay = new HashMap<>();
+        pay.put(2000, 0);
+        pay.put(1000, 0);
+        pay.put(500, 0);
+        pay.put(200, 0);
+        pay.put(100, 0);
+        pay.put(50, 0);
+        pay.put(20, 0);
+        pay.put(10, 10000);
+        CashCount payCount = new CashCount(pay);
+
+
+        // Expected change 987.60
+        HashMap<Integer, Integer> returnH = new HashMap<>();
+        returnH.put(2000, 5);
+        returnH.put(1000, 5);
+        returnH.put(500, 5);
+        returnH.put(200, 5);
+        returnH.put(100, 5);
+        returnH.put(50, 5);
+        returnH.put(20, 5);
+        returnH.put(10, 7941);
+        CashCount returnCount = new CashCount(returnH);
+
+        assert(((CashCount) zoo.payEntranceFee(payCount)).getCoins().equals(returnH));
+
+        cashCount = (CashCount) zoo.getCashSupply();
+
+        for (int key: cashCount.getCoins().keySet()) {
+            System.out.println(key + ": " + cashCount.getCoins().get(key) + " " + returnCount.getCoins().get(key));
+        }
     }
 }

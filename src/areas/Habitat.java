@@ -5,11 +5,11 @@ import zoo.Codes;
 
 import java.util.ArrayList;
 
-public abstract class Habitat extends Area implements IArea{
+public abstract class Habitat extends Area {
     protected int capacity;
     protected ArrayList<Animal> animals = new ArrayList<>();
 
-    public Habitat(int capacity){
+    public Habitat(int capacity) {
         this.capacity = capacity;
     }
 
@@ -18,22 +18,22 @@ public abstract class Habitat extends Area implements IArea{
     public boolean compatible(Animal animal) {
         boolean isCompatible = true;
 
-        for (Animal animalInHabitat: animals) {
+        for (Animal animalInHabitat : animals) {
             isCompatible &= animalInHabitat.isCompatibleWith(animal);
         }
 
         return isCompatible;
     }
 
-    public boolean isFull(){
+    public boolean isFull() {
         return capacity == animals.size();
     }
 
-    public byte spaceAndCompatible(Animal animal){
+    public byte spaceAndCompatible(Animal animal) {
         if (isFull()) {
             return Codes.HABITAT_FULL;
         } else {
-            if (!compatible(animal)){
+            if (!compatible(animal)) {
                 return Codes.INCOMPATIBLE_INHABITANTS;
             } else {
                 return Codes.ANIMAL_ADDED;
@@ -41,7 +41,7 @@ public abstract class Habitat extends Area implements IArea{
         }
     }
 
-    public ArrayList<Animal> getAnimals (){
+    public ArrayList<Animal> getAnimals() {
         return animals;
     }
 }

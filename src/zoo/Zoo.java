@@ -14,10 +14,10 @@ public class Zoo implements IZoo {
     private int idCounter = 1;
 
     private int entranceFee;
-    private CashCount stonks = new CashCount();
+    private CashCount cashCount = new CashCount();
 
     public Zoo() {
-        this.areas.put(0, new Entrance());
+        this.areas.put(0, Entrance.getInstance());
     }
 
     @Override
@@ -37,7 +37,7 @@ public class Zoo implements IZoo {
 
     private boolean addAreaError(IArea area) {
         if (area instanceof Entrance) {
-            System.err.println("Entrance can't be added!");
+            System.err.println("Another entrance can't be added!");
             return true;
         } else if (areas.containsValue(area)) { // If area is already in the zoo
             System.err.println("Area is already in the zoo!");
@@ -82,10 +82,10 @@ public class Zoo implements IZoo {
     @Override
     public byte addAnimal(int areaId, Animal animal) {
         IArea area = areas.get(areaId);
-        if (area instanceof HumanArea) {
-            return Codes.NOT_A_HABITAT;
-        } else {
+        if (area instanceof Habitat) {
             return ((Habitat) area).add(animal);
+        } else {
+            return Codes.NOT_A_HABITAT;
         }
     }
 
@@ -208,22 +208,31 @@ public class Zoo implements IZoo {
 
     @Override
     public void setEntranceFee(int pounds, int pence) {
-        if (pence % 10 != 0) {
-            System.err.println("Invalid entrance fee! No coins smaller than 10 allowed.");
-        } else {
+        if (!entranceFeeError(pounds, pence)) {
             entranceFee = pounds * 100 + pence;
         }
     }
 
+    private boolean entranceFeeError(int pounds, int pence) {
+        if (pence % 10 != 0) {
+            System.err.println("Invalid entrance fee! No coins smaller than 10 allowed.");
+            return true;
+        } else if (pence < 0 || pounds < 0){
+            System.err.println("Invalid amount! The value has to be positive.");
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public ICashCount getCashSupply() {
-        return stonks;
+        return cashCount;
     }
 
     @Override
     public void setCashSupply(ICashCount coins) {
         if (coins instanceof CashCount) {
-            this.stonks = (CashCount) coins;
+            this.cashCount = (CashCount) coins;
         }
     }
 
@@ -232,12 +241,18 @@ public class Zoo implements IZoo {
         int moneyInserted = ((CashCount) cashInserted).cashCountValue();
         int change = moneyInserted - entranceFee;
 
-        CashCount returnCash = stonks.returnCoins(change);
+        // Creating a temporary CashCount that replace the other if transaction is successful
+        CashCount tmp = new CashCount();
+        tmp.addCoins(cashCount);
+        tmp.addCoins((CashCount) cashInserted);
+
+        CashCount returnCash = tmp.returnCoins(change);
 
         if (returnCash == null) {
             System.err.println("Transaction unsuccessful!");
             return cashInserted;
         } else {
+            this.cashCount = tmp;
             return returnCash;
         }
     }

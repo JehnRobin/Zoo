@@ -135,11 +135,15 @@ public class CashCount implements ICashCount {
         }
     }
 
+    public void addCoins(CashCount coins) {
+        addCoins(coins.getCoins());
+    }
+
     private boolean checkHashMapIsValid(HashMap<Integer, Integer> coins) {
         boolean retBool = true;
 
         // Returns true if every key is in the list of allowedCoins and the corresponding number is positive
-        for (int key : coins.keySet()) {
+        for (int key : allowedCoins) {
             retBool &= this.allowedCoins.contains(key) && coins.get(key) >= 0;
         }
 
@@ -154,7 +158,7 @@ public class CashCount implements ICashCount {
     public int cashCountValue() {
         int value = 0;
 
-        for (int key : coins.keySet()) {
+        for (int key : allowedCoins) {
             value += key * coins.get(key);
         }
 
@@ -163,10 +167,11 @@ public class CashCount implements ICashCount {
 
     // Returns the least possible number of coins for a given value if possible, otherwise it returns false
     public CashCount returnCoins(int value) {
-        HashMap<Integer, Integer> hashReturnCoins = new HashMap<>();
+        CashCount returnCash = new CashCount();
+        HashMap<Integer, Integer> hashReturnCoins = returnCash.getCoins();
 
         // Calculates the correct change in the least possible coins if
-        for (int key : coins.keySet()) {
+        for (int key : allowedCoins) {
             while (key <= value && coins.get(key) > 0) {
                 value -= key;
                 hashReturnCoins.put(key, hashReturnCoins.get(key) + 1);
@@ -176,7 +181,8 @@ public class CashCount implements ICashCount {
 
         // If correct change could be calculated return it, else return null
         if (value == 0) {
-            return new CashCount(hashReturnCoins);
+            returnCash.setCoins(hashReturnCoins);
+            return returnCash;
         } else {
             // Puts the coins back if change cannot be produced
             this.addCoins(hashReturnCoins);
