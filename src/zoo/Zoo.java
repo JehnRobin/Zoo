@@ -17,7 +17,7 @@ public class Zoo implements IZoo {
     private CashCount cashCount = new CashCount();
 
     public Zoo() {
-        this.areas.put(0, Entrance.getInstance());
+        this.areas.put(0, new Entrance());
     }
 
     @Override

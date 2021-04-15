@@ -46,7 +46,9 @@ public class CashCount implements ICashCount {
 
     @Override
     public void setNrNotes_10pounds(int noteCount) {
-        coins.put(1000, noteCount);
+        if (checkIsValidAmount(noteCount)){
+            coins.put(1000, noteCount);
+        }
     }
 
     @Override
@@ -56,7 +58,9 @@ public class CashCount implements ICashCount {
 
     @Override
     public void setNrNotes_5pounds(int noteCount) {
-        coins.put(500, noteCount);
+        if (checkIsValidAmount(noteCount)){
+            coins.put(500, noteCount);
+        }
     }
 
     @Override
@@ -66,7 +70,9 @@ public class CashCount implements ICashCount {
 
     @Override
     public void setNrCoins_2pounds(int coinCount) {
-        coins.put(200, coinCount);
+        if (checkIsValidAmount(coinCount)){
+            coins.put(200, coinCount);
+        }
     }
 
     @Override
@@ -76,7 +82,9 @@ public class CashCount implements ICashCount {
 
     @Override
     public void setNrCoins_1pound(int coinCount) {
-        coins.put(100, coinCount);
+        if (checkIsValidAmount(coinCount)){
+            coins.put(100, coinCount);
+        }
     }
 
     @Override
@@ -86,7 +94,9 @@ public class CashCount implements ICashCount {
 
     @Override
     public void setNrCoins_50p(int coinCount) {
-        coins.put(50, coinCount);
+        if (checkIsValidAmount(coinCount)){
+            coins.put(50, coinCount);
+        }
     }
 
     @Override
@@ -96,7 +106,9 @@ public class CashCount implements ICashCount {
 
     @Override
     public void setNrCoins_20p(int coinCount) {
-        coins.put(20, coinCount);
+        if (checkIsValidAmount(coinCount)){
+            coins.put(20, coinCount);
+        }
     }
 
     @Override
@@ -106,7 +118,9 @@ public class CashCount implements ICashCount {
 
     @Override
     public void setNrCoins_10p(int coinCount) {
-        coins.put(10, coinCount);
+        if (checkIsValidAmount(coinCount)){
+            coins.put(10, coinCount);
+        }
     }
 
     private boolean checkIsValidAmount(int amount){
